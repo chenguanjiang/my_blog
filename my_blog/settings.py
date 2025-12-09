@@ -134,3 +134,6 @@ STATICFILES_DIRS = (
 
 # Django 4.2 主键类型推荐设置
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 测试环境允许所有
+ALLOWED_HOSTS = ['*']
