@@ -27,3 +27,15 @@ class ArticlePost(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SiteCounter(models.Model):
+    total = models.PositiveBigIntegerField(default=0)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = '站点访问计数'
+        verbose_name_plural = '站点访问计数'
+
+    def __str__(self):
+        return f"Total: {self.total}"

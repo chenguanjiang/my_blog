@@ -19,6 +19,17 @@
   background-size: cover;
   background-position: center;
 }
+.hero .counter {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 193, 7, .95);
+  color: #212529;
+  padding: .35rem .75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(0,0,0,.15);
+}
 .hero .title {
   font-size: 3rem;
   font-weight: 700;
@@ -45,6 +56,7 @@
 
 <section class="hero">
   <div class="container">
+    <div class="counter">总访问量：{{ visits_total }}</div>
     <div class="row">
       <div class="col-12">
         <h1 class="title mb-3">欢迎来到老童的博客</h1>

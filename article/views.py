@@ -1,11 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.db.models import F
 
-from article.models import ArticlePost
+from article.models import ArticlePost, SiteCounter
 
 
 # Create your views here.
 
+#文章列表
 #文章列表
 def article_list(request):
     #取出所有博客文章
@@ -25,3 +27,13 @@ def article_detail(request, id):
         'article': article
     }
     return render(request, 'article/detail.html', context)
+
+
+def home(request):
+    counter, _ = SiteCounter.objects.get_or_create(pk=1, defaults={'total': 0})
+    SiteCounter.objects.filter(pk=counter.pk).update(total=F('total') + 1)
+    counter.refresh_from_db()
+    context = {
+        'visits_total': counter.total
+    }
+    return render(request, 'index.html', context)
