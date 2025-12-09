@@ -6,43 +6,97 @@
 {% endblock title %}
 
 {% block content %}
-<div class="jumbotron jumbotron-fluid mb-0">
-  <div class="container">
-    <h1 class="display-4">欢迎来到老童梦幻西游</h1>
-    <p class="lead">在这里浏览最新文章与内容精选。</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'article:article_list' %}" role="button">进入博客列表</a>
-  </div>
-  </div>
+<style>
+.hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  background-image: linear-gradient(135deg, rgba(60,60,60,.55), rgba(0,0,0,.55)), url("{% static 'img/laotong.jpg' %}");
+  background-size: cover;
+  background-position: center;
+}
+.hero .title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.hero .subtitle { font-size: 1.2rem; opacity: .9; }
+.hero .btn-group .btn { margin: 0 .35rem; }
 
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title">最新文章</h5>
-          <p class="card-text">查看最近发布的内容，快速开始阅读。</p>
-          <a href="{% url 'article:article_list' %}" class="btn btn-outline-primary">打开列表</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title">分类浏览</h5>
-          <p class="card-text">按主题探索文章（可后续扩展）。</p>
-          <a href="{% url 'article:article_list' %}" class="btn btn-outline-secondary">去看看</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title">热门推荐</h5>
-          <p class="card-text">挑选值得一读的内容（可后续完善）。</p>
-          <a href="{% url 'article:article_list' %}" class="btn btn-outline-success">开始阅读</a>
+.feature-icon {
+  font-size: 1.75rem;
+}
+.soft-card {
+  border: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  border-radius: .75rem;
+}
+.soft-card .card-body { padding: 1.5rem; }
+
+.cta {
+  background: linear-gradient(135deg, #6f42c1, #17a2b8);
+  color: #fff;
+}
+</style>
+
+<section class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="title mb-3">欢迎来到老童的博客</h1>
+        <p class="subtitle mb-4">记录与分享，发现有趣与价值。</p>
+        <div class="btn-group">
+          <a class="btn btn-lg btn-primary" href="{% url 'article:article_list' %}">进入博客列表</a>
+          <a class="btn btn-lg btn-outline-light" href="#features">了解更多</a>
         </div>
       </div>
     </div>
   </div>
-</div>
+  </section>
+
+<section id="features" class="container mt-5">
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card soft-card h-100">
+        <div class="card-body">
+          <div class="feature-icon mb-2">✨</div>
+          <h5 class="card-title">精美设计</h5>
+          <p class="card-text">清晰排版与柔和动效，带来舒适阅读体验。</p>
+          <a href="{% url 'article:article_list' %}" class="btn btn-outline-primary">开始阅读</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card soft-card h-100">
+        <div class="card-body">
+          <div class="feature-icon mb-2">📚</div>
+          <h5 class="card-title">内容精选</h5>
+          <p class="card-text">按主题浏览与热门推荐，快速定位你关心的内容。</p>
+          <a href="{% url 'article:article_list' %}" class="btn btn-outline-success">查看精选</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card soft-card h-100">
+        <div class="card-body">
+          <div class="feature-icon mb-2">🚀</div>
+          <h5 class="card-title">高效体验</h5>
+          <p class="card-text">简单直达与便捷导航，让阅读更高效。</p>
+          <a href="{% url 'article:article_list' %}" class="btn btn-outline-secondary">去探索</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta py-5 mt-4">
+  <div class="container text-center">
+    <h3 class="mb-3">立即进入博客，发现新鲜观点</h3>
+    <a class="btn btn-light btn-lg" href="{% url 'article:article_list' %}">进入博客列表</a>
+  </div>
+</section>
 {% endblock content %}
