@@ -1,0 +1,33 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# OS/Editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Environment and secrets
+.env
+.env.*
+
+# Django static/media (when collected/generated)
+staticfiles/
+media/
+db.sqlite3
+
+# Logs
+*.log
+
+# Coverage/test
+.coverage
+.pytest_cache/
+
+# Node artifacts (if any static tooling used)
+node_modules/

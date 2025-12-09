@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    博客首页
+{% endblock title %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid mb-0">
+  <div class="container">
+    <h1 class="display-4">欢迎来到我的博客</h1>
+    <p class="lead">在这里浏览最新文章与内容精选。</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'article:article_list' %}" role="button">进入博客列表</a>
+  </div>
+  </div>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">最新文章</h5>
+          <p class="card-text">查看最近发布的内容，快速开始阅读。</p>
+          <a href="{% url 'article:article_list' %}" class="btn btn-outline-primary">打开列表</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">分类浏览</h5>
+          <p class="card-text">按主题探索文章（可后续扩展）。</p>
+          <a href="{% url 'article:article_list' %}" class="btn btn-outline-secondary">去看看</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">热门推荐</h5>
+          <p class="card-text">挑选值得一读的内容（可后续完善）。</p>
+          <a href="{% url 'article:article_list' %}" class="btn btn-outline-success">开始阅读</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
