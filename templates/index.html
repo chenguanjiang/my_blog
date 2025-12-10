@@ -52,6 +52,11 @@
   background: linear-gradient(135deg, #6f42c1, #17a2b8);
   color: #fff;
 }
+.infinite-carousel{overflow:hidden;width:100%;display:flex;justify-content:center}
+.infinite-carousel .track{display:flex;align-items:center;animation:scroll 60s linear infinite}
+.infinite-carousel .item{flex:0 0 600px;margin:0 10px}
+.infinite-carousel .item img{width:600px;height:360px;object-fit:cover;border-radius:.5rem;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 </style>
 
 <section class="hero">
@@ -68,7 +73,18 @@
       </div>
     </div>
   </div>
-  </section>
+</section>
+
+<div class="infinite-carousel mt-4">
+  <div class="track">
+    {% for img in newboy_images %}
+      <div class="item"><img src="{{ img.src }}" alt="{{ img.title }}"></div>
+    {% endfor %}
+    {% for img in newboy_images %}
+      <div class="item"><img src="{{ img.src }}" alt="{{ img.title }}"></div>
+    {% endfor %}
+  </div>
+</div>
 
 <section id="features" class="container mt-5">
   <div class="row">

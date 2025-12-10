@@ -1,6 +1,8 @@
+import os
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import F
+from django.conf import settings
 
 from article.models import ArticlePost, SiteCounter
 
@@ -33,7 +35,15 @@ def home(request):
     counter, _ = SiteCounter.objects.get_or_create(pk=1, defaults={'total': 0})
     SiteCounter.objects.filter(pk=counter.pk).update(total=F('total') + 1)
     counter.refresh_from_db()
+    base_dir = os.path.join(settings.BASE_DIR, 'static', 'img', 'newboy')
+    names = []
+    if os.path.isdir(base_dir):
+        for f in os.listdir(base_dir):
+            if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                names.append(f)
+    newboy_images = [{'src': f"/static/img/newboy/{name}", 'title': os.path.splitext(name)[0]} for name in sorted(names)]
     context = {
-        'visits_total': counter.total
+        'visits_total': counter.total,
+        'newboy_images': newboy_images
     }
     return render(request, 'index.html', context)
