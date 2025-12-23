@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
 from article.views import home as home_view
 
 urlpatterns = [
@@ -25,4 +24,5 @@ urlpatterns = [
     # 新增代码，配置app的url
     path('article/', include('article.urls', namespace='article')),
     path('album/', include('album.urls', namespace='album')),
+    path('userprofile/', include('userprofile.urls', namespace='userprofile')),
 ]
