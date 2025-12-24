@@ -18,7 +18,12 @@
         <div class="row">
             <!-- 标题及作者 -->
             <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
-            <div class="col-12 alert alert-success">作者：{{ article.author }}</div>
+            <div class="col-12 alert alert-success d-flex align-items-center">
+                {% if article.author.profile.avatar %}
+                    <img src="{{ article.author.profile.avatar.url }}" alt="avatar" class="mr-2" style="width:36px;height:36px;border-radius:50%;object-fit:cover;background-color:#fff;border:1px solid #dee2e6;">
+                {% endif %}
+                <span>作者：{{ article.author }}</span>
+            </div>
             <!-- 文章正文 -->
             <div class="col-12">
                 <p>{{ article.body|safe }}</p>
