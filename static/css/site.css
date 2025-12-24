@@ -1,0 +1,42 @@
+/* 全局导航右侧横排与间距 */
+.navbar-nav.flex-row {
+  flex-wrap: nowrap;
+}
+.navbar-nav.flex-row > .nav-item + .nav-item {
+  margin-left: .5rem;
+}
+
+/* 头像统一样式（桌面） */
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #fff;
+  border: 2px solid rgba(255,255,255,0.9);
+}
+
+/* 移动端优化 */
+@media (max-width: 576px) {
+  /* 防止换行并允许横向滚动 */
+  .navbar-nav.flex-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: .25rem;
+  }
+  /* 缩小按钮尺寸以适配窄屏 */
+  .navbar .btn {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.2;
+  }
+  /* 缩小头像并减轻描边 */
+  .header-avatar {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255,255,255,0.9);
+  }
+  .navbar-brand {
+    margin-bottom: .5rem;
+  }
+}
