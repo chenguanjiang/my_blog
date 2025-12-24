@@ -6,29 +6,51 @@
     <!-- 导航栏商标 -->
     <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
       <img src="{% static 'img/laotong.jpg' %}" alt="logo" class="d-inline-block align-top mr-2" style="height:32px;width:auto;">
-      我的梦幻西游生涯
+      <span style="color:#0ff">站点首页</span>
     </a>
 
     <!-- 导航入口 -->
     <div>
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
+      <ul class="navbar-nav ml-auto align-items-center">
+        <li class="nav-item d-flex align-items-center">
           <a class="btn btn-warning text-dark font-weight-bold px-3 py-1 rounded-pill ml-2" href="{% url 'article:article_create' %}">写文章</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center">
           <a class="btn btn-warning text-dark font-weight-bold px-3 py-1 rounded-pill ml-2" href="{% url 'album:album_list' %}">相册</a>
         </li>
         {% if user.is_authenticated %}
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown d-flex align-items-center">
             <a class="btn btn-primary dropdown-toggle text-white font-weight-bold px-3 py-1 rounded-pill ml-2" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
               {{ user.username }}
             </a>
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="avatar" class="ml-2" style="width:40px;height:40px;border-radius:50%;object-fit:cover;background-color:#fff;border:2px solid rgba(255,255,255,0.9);">
+            {% endif %}
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'userprofile:edit' user.id %}">编辑用户</a>
+              <a class="dropdown-item" href="#" onclick="user_delete()">删除用户</a>
               <a class="dropdown-item" href="{% url 'userprofile:logout' %}">退出登录</a>
             </div>
         </li>
+        <form style="display:none;" 
+        id="user_delete";
+        action="{% url 'userprofile:delete' user.id %}"
+        method="post"
+        >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger dropdown-item">确认删除</button>  
+        </form>
+        <script>
+            function user_delete(){
+                layer.confirm('确认删除用户吗？', {
+                    btn: ['确认','取消'] //按钮
+                }, function(){
+                    $('#user_delete').submit();
+                });
+            }
+        </script>
         {% else %}
-            <li class="nav-item">
+            <li class="nav-item d-flex align-items-center">
                 <a class="btn btn-primary text-white font-weight-bold px-3 py-1 rounded-pill ml-2" href="{% url 'userprofile:login' %}">登录</a>
             </li>                    
         {% endif %}

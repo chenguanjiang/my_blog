@@ -22,15 +22,26 @@
             <!-- 文章正文 -->
             <div class="col-12">
                 <p>{{ article.body|safe }}</p>
-                <a class="btn btn-sm btn-outline-info" href="{% url 'article:article_update' article.id %}">编辑文章</a>
-                <a class="btn btn-sm btn-outline-danger" href="#" onclick="confirm_delete()">删除文章</a>
-                <form
-                    style="display: none;"
-                    id="delete-form"
-                    action="{% url 'article:article_delete' article.id %}"
-                    method="post"
-                >
-                    {% csrf_token %}
+                {% if user.is_authenticated and user == article.author %}
+                    <a class="btn btn-sm btn-outline-info" href="{% url 'article:article_update' article.id %}">编辑文章</a>
+                    <form
+                        style="display: none;"
+                        id="edit-form"
+                        action="{% url 'article:article_delete' article.id %}"
+                        method="post"
+                    >
+                        {% csrf_token %}
+                    </form>
+                    <a class="btn btn-sm btn-outline-danger" href="#" onclick="confirm_delete()">删除文章</a>
+                    <form
+                        style="display: none;"
+                        id="delete-form"
+                        action="{% url 'article:article_delete' article.id %}"
+                        method="post"
+                    >
+                        {% csrf_token %}
+                    </form>
+                {% endif %}
                 </form>
             </div>
         </div>

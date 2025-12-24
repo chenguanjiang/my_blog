@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from article.forms import ArticlePostForm
 from article.models import ArticlePost, SiteCounter
@@ -54,12 +55,13 @@ def home(request):
     return render(request, 'index.html', context)
 
 
+@login_required(login_url='/userprofile/login/')
 def article_create(request):
     if request.method == 'POST':
         article_post_form = ArticlePostForm(data=request.POST)
         if article_post_form.is_valid():
             new_article = article_post_form.save(commit=False)
-            new_article.author = User.objects.get(id=1)
+            new_article.author = User.objects.get(id=request.user.id)
             new_article.save()
             return redirect('article:article_list')
         else:
@@ -70,26 +72,34 @@ def article_create(request):
         return render(request, 'article/create.html', context)
 
 
+@login_required(login_url='/userprofile/login/')
 def article_delete(request, id):
     if request.method == 'POST':
-        article = get_object_or_404(ArticlePost, id=id)
-        article.delete()
-        return redirect('article:article_list')
+        if request.user.is_authenticated and request.user == article.author:
+            article = get_object_or_404(ArticlePost, id=id)
+            article.delete()
+            return redirect('article:article_list')
+        else:
+            return HttpResponse("您没有权限删除该文章")
     else:
         return HttpResponse("仅允许POST请求")
 
 
+@login_required(login_url='/userprofile/login/')
 def article_update(request, id):
     article = ArticlePost.objects.get(id=id)
     if request.method == "POST":
-        article_post_form = ArticlePostForm(data=request.POST)
-        if article_post_form.is_valid():
-            article.title = request.POST['title']
-            article.body = request.POST['body']
-            article.save()
-            return redirect('article:article_detail', id=id)
+        if request.user.is_authenticated and request.user == article.author:
+            article_post_form = ArticlePostForm(data=request.POST)
+            if article_post_form.is_valid():
+                article.title = request.POST['title']
+                article.body = request.POST['body']
+                article.save()
+                return redirect('article:article_detail', id=id)
+            else:
+                return HttpResponse("表单内容有误，请重新填写")
         else:
-            return HttpResponse("表单内容有误，请重新填写")
+            return HttpResponse("您没有权限更新该文章")
     else:
         article_post_form = ArticlePostForm()
         context = {

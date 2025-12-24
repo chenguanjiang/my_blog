@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% load static %}
+{% block title %} 用户信息 {% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            {% if messages %}
+            <ul id="__messages__" style="display:none">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <script>
+            window.addEventListener('load', function(){
+                var ul = document.getElementById('__messages__');
+                if(!ul) return;
+                var texts = [];
+                for (var i = 0; i < ul.children.length; i++) {
+                    texts.push(ul.children[i].textContent);
+                }
+                if (!texts.length) return;
+                if (window.layer && typeof window.layer.msg === 'function') {
+                    for (var j = 0; j < texts.length; j++) {
+                        (function(t, idx){
+                            setTimeout(function(){
+                                window.layer.msg(t, {icon: 1, time: 1800});
+                            }, idx * 200);
+                        })(texts[j], j);
+                    }
+                } else {
+                    alert(texts.join('\n'));
+                }
+            });
+            </script>
+            {% endif %}
+            <div class="col-md-4">用户名: {{ user.username }}</div>
+            <br>
+            <form method="post" action="." enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group col-md-4">
+                    <label for="avatar">头像</label>
+                    {% if profile.avatar %}
+                        <div class="mb-2">
+                            <img src="{{ profile.avatar.url }}" alt="avatar" class="img-thumbnail" style="width:120px;height:120px;object-fit:cover;">
+                        </div>
+                    {% else %}
+                        <div class="mb-2 text-muted">暂无头像</div>
+                    {% endif %}
+                    <input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*">
+                </div>
+                <!-- phone -->
+                <div class="form-group col-md-4">
+                    <label for="phone">电话</label>
+                    <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.phone }}">
+                </div>
+                <!-- bio -->
+                <div class="form-group col-md-4">
+                    <label for="bio">简介</label>
+                    <textarea type="text" class="form-control" id="bio" name="bio" rows="12">{{ profile.bio }}</textarea>
+                </div>
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

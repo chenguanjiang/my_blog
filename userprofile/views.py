@@ -1,7 +1,13 @@
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
-from .forms import UserLoginForm, UserRegisterForm
+from .models import Profile
+from .forms import UserLoginForm, UserRegisterForm, ProfileForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+
 
 # Create your views here.
 
@@ -53,4 +59,50 @@ def user_register(request):
         return render(request, 'userprofile/register.html', context)
     else:
         return HttpResponse('请使用GET或POST请求数据')
+
+
+@login_required(login_url='/userprofile/login/')
+def user_delete(request, id):
+    if request.method == 'POST':
+        user = User.objects.get(id=id)
+        if request.user == user:
+            logout(request)
+            user.delete()
+            return redirect('home')
+        else:
+            return HttpResponse('您没有权限删除该用户')
+    else:
+        return HttpResponse('请使用POST请求删除用户')
+
+@login_required(login_url='/userprofile/login/')
+def profile_edit(request, id):
+    user = User.objects.get(id=id)
+    if Profile.objects.filter(user_id=id).exists():
+        profile = Profile.objects.get(user_id=id)
+    else:
+        profile = Profile(user_id=id)
+
+    if request.method == 'POST':
+        if request.user != user:
+            return HttpResponse('您没有权限编辑该用户的个人信息')
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, '个人资料已更新')
+            return redirect("userprofile:edit", id=id)
+        else:
+            return HttpResponse('个人信息更新失败')
+        
+    elif request.method == 'GET':
+        profile_form = ProfileForm(instance=profile)
+        context = {
+            'form': profile_form,
+            'profile': profile,
+            'user': user,
+        }
+        return render(request, 'userprofile/edit.html', context)
+    else:
+        return HttpResponse('请使用GET或POST请求数据')
+
+
 
