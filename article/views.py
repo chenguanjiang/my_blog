@@ -6,6 +6,10 @@ from django.db.models import F
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.paginator import Paginator
+
+
 
 from article.forms import ArticlePostForm
 from article.models import ArticlePost, SiteCounter
@@ -17,7 +21,9 @@ from article.models import ArticlePost, SiteCounter
 def article_list(request):
     #取出所有博客文章
     articles = ArticlePost.objects.all()
-    #需要传递给模板template的对象
+    paginator = Paginator(articles, 6)
+    page = request.GET.get('page', 1)
+    articles = paginator.get_page(page)
     context = {
         'articles': articles
     }
@@ -26,6 +32,8 @@ def article_list(request):
 #文章详情
 def article_detail(request, id):
     article = get_object_or_404(ArticlePost, id=id)
+    article.total_views += 1
+    article.save(update_fields=['total_views'])
     article.body = markdown.markdown(article.body, extensions=[
         'markdown.extensions.extra',
         'markdown.extensions.codehilite',
@@ -63,6 +71,7 @@ def article_create(request):
             new_article = article_post_form.save(commit=False)
             new_article.author = User.objects.get(id=request.user.id)
             new_article.save()
+            messages.success(request, '文章已发布')
             return redirect('article:article_list')
         else:
             return HttpResponse("表单内容有误，请重新填写")
@@ -75,9 +84,10 @@ def article_create(request):
 @login_required(login_url='/userprofile/login/')
 def article_delete(request, id):
     if request.method == 'POST':
+        article = get_object_or_404(ArticlePost, id=id)
         if request.user.is_authenticated and request.user == article.author:
-            article = get_object_or_404(ArticlePost, id=id)
             article.delete()
+            messages.success(request, '文章已删除')
             return redirect('article:article_list')
         else:
             return HttpResponse("您没有权限删除该文章")
@@ -95,6 +105,7 @@ def article_update(request, id):
                 article.title = request.POST['title']
                 article.body = request.POST['body']
                 article.save()
+                messages.success(request, '文章已更新')
                 return redirect('article:article_detail', id=id)
             else:
                 return HttpResponse("表单内容有误，请重新填写")

@@ -10,6 +10,36 @@
 <!-- 写入 base.html 中定义的 content -->
 {% block content %}
 
+{% if messages %}
+<ul id="__messages__" style="display:none">
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+<script>
+window.addEventListener('load', function(){
+    var ul = document.getElementById('__messages__');
+    if(!ul) return;
+    var texts = [];
+    for (var i = 0; i < ul.children.length; i++) {
+        texts.push(ul.children[i].textContent);
+    }
+    if (!texts.length) return;
+    if (window.layer && typeof window.layer.msg === 'function') {
+        for (var j = 0; j < texts.length; j++) {
+            (function(t, idx){
+                setTimeout(function(){
+                    window.layer.msg(t, {icon: 1, time: 1800});
+                }, idx * 200);
+            })(texts[j], j);
+        }
+    } else {
+        alert(texts.join('\n'));
+    }
+});
+</script>
+{% endif %}
+
 <!-- 定义放置文章标题的div容器 -->
 <div class="container">
     <div class="row mt-2">
@@ -35,14 +65,57 @@
                         {% endwith %}
                     </div>
                     <div class="border-top my-2" style="border-color:#dee2e6;"></div>
-                    <div class="mt-2">
+                    <div class="mt-2 d-flex justify-content-between align-items-center">
                         <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary btn-sm">阅读本文</a>
+                        <span class="badge badge-pill badge-light text-secondary d-flex align-items-center">
+                            <span aria-hidden="true">👁️</span>
+                            <span class="ml-1">{{ article.total_views }}</span>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
         {% endfor %}
 
+    </div>
+</div>
+<!-- 页码导航 -->
+ <div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            <!-- 如果不是第一页，则显示上翻按钮 -->
+            {% if articles.has_previous %}
+                <a href="?page=1" class="btn btn-outline-secondary btn-sm rounded-pill">
+                    &laquo; 1
+                </a>
+                <span class="mx-1 text-muted">…</span>
+                <a href="?page={{ articles.previous_page_number }}" 
+                   class="btn btn-outline-primary btn-sm rounded-pill"
+                >
+                    {{ articles.previous_page_number }}
+                </a>
+            {% endif %}
+
+            <!-- 当前页面 -->
+            <span class="btn btn-primary btn-sm rounded-pill">
+                {{ articles.number }}
+            </span>
+
+            <!-- 如果不是最末页，则显示下翻按钮 -->
+            {% if articles.has_next %}
+                <a href="?page={{ articles.next_page_number }}"
+                   class="btn btn-outline-primary btn-sm rounded-pill"
+                >
+                    {{ articles.next_page_number }}
+                </a>
+                <span class="mx-1 text-muted">…</span>
+                <a href="?page={{ articles.paginator.num_pages }}"
+                   class="btn btn-outline-secondary btn-sm rounded-pill"
+                >
+                    {{ articles.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
     </div>
 </div>
 {% endblock content %}
