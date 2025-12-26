@@ -16,7 +16,7 @@ from comment.models import Comment
 
 
 from article.forms import ArticlePostForm
-from article.models import ArticlePost, SiteCounter
+from article.models import ArticlePost, SiteCounter, ArticleColumn
 
 
 # Create your views here.
@@ -98,7 +98,8 @@ def article_create(request):
             return HttpResponse("表单内容有误，请重新填写")
     else:
         article_post_form = ArticlePostForm()
-        context = { 'article_post_form': article_post_form }
+        columns = ArticleColumn.objects.all().order_by('-created')
+        context = { 'article_post_form': article_post_form, 'columns': columns }
         return render(request, 'article/create.html', context)
 
 
@@ -125,6 +126,14 @@ def article_update(request, id):
             if article_post_form.is_valid():
                 article.title = request.POST['title']
                 article.body = request.POST['body']
+                col_id = request.POST.get('column')
+                if col_id:
+                    try:
+                        article.column = ArticleColumn.objects.get(id=col_id)
+                    except ArticleColumn.DoesNotExist:
+                        article.column = None
+                else:
+                    article.column = None
                 article.save()
                 messages.success(request, '文章已更新')
                 return redirect('article:article_detail', id=id)
@@ -137,5 +146,6 @@ def article_update(request, id):
         context = {
             'article': article,
             'article_post_form': article_post_form,
+            'columns': ArticleColumn.objects.all().order_by('-created'),
         }
         return render(request, 'article/update.html', context)
