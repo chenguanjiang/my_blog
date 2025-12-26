@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.urls import reverse
+from urllib.parse import urlparse
+from django.db.models import Q
+from comment.models import Comment
 
 
 
@@ -19,19 +23,28 @@ from article.models import ArticlePost, SiteCounter
 
 
 def article_list(request):
-    #取出所有博客文章
-    articles = ArticlePost.objects.all()
+    search = request.GET.get('search', '').strip()
+    order = request.GET.get('order', 'created')
+    if search:
+        articles = ArticlePost.objects.filter(
+        Q(title__icontains=search) | Q(body__icontains=search)
+    ).order_by(f'-{order}')
+    else:
+        articles = ArticlePost.objects.all().order_by(f'-{order}')
     paginator = Paginator(articles, 6)
     page = request.GET.get('page', 1)
     articles = paginator.get_page(page)
     context = {
-        'articles': articles
+        'articles': articles,
+        'order': order,
+        'search': search
     }
     return render(request, 'article/list.html', context)
 
 #文章详情
 def article_detail(request, id):
     article = get_object_or_404(ArticlePost, id=id)
+    comments = Comment.objects.filter(article=article)
     article.total_views += 1
     article.save(update_fields=['total_views'])
     article.body = markdown.markdown(article.body, extensions=[
@@ -39,8 +52,16 @@ def article_detail(request, id):
         'markdown.extensions.codehilite',
         'markdown.extensions.tables',
     ])
+    ref = request.META.get('HTTP_REFERER') or ''
+    back_list_url = reverse('article:article_list')
+    if ref:
+        p = urlparse(ref)
+        if 'article-list' in p.path:
+            back_list_url = ref
     context = {
-        'article': article
+        'article': article,
+        'back_list_url': back_list_url,
+        'comments': comments,
     }
     return render(request, 'article/detail.html', context)
 
