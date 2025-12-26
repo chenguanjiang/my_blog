@@ -2,7 +2,7 @@ import os
 from django.http import HttpResponse
 import markdown
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import F
+from django.db.models import F, Count
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -27,10 +27,10 @@ def article_list(request):
     order = request.GET.get('order', 'created')
     if search:
         articles = ArticlePost.objects.filter(
-        Q(title__icontains=search) | Q(body__icontains=search)
-    ).order_by(f'-{order}')
+            Q(title__icontains=search) | Q(body__icontains=search)
+        ).annotate(comment_count=Count('comments')).order_by(f'-{order}')
     else:
-        articles = ArticlePost.objects.all().order_by(f'-{order}')
+        articles = ArticlePost.objects.all().annotate(comment_count=Count('comments')).order_by(f'-{order}')
     paginator = Paginator(articles, 6)
     page = request.GET.get('page', 1)
     articles = paginator.get_page(page)

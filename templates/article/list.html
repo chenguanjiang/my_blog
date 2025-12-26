@@ -110,10 +110,16 @@ window.addEventListener('load', function(){
                     <div class="border-top my-2" style="border-color:#dee2e6;"></div>
                     <div class="mt-2 d-flex justify-content-between align-items-center">
                         <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary btn-sm">阅读本文</a>
-                        <span class="badge badge-pill badge-light text-secondary d-flex align-items-center">
-                            <span aria-hidden="true">👁️</span>
-                            <span class="ml-1">{{ article.total_views }}</span>
-                        </span>
+                        <div class="d-flex align-items-center">
+                            <span class="badge badge-pill badge-light text-secondary d-flex align-items-center mr-2">
+                                <span aria-hidden="true">👁️</span>
+                                <span class="ml-1">{{ article.total_views }}</span>
+                            </span>
+                            <span class="badge badge-pill badge-light text-secondary d-flex align-items-center">
+                                <span aria-hidden="true">💬</span>
+                                <span class="ml-1">{{ article.comment_count }}</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
