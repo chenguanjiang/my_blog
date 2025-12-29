@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'userprofile',
     'comment',
     'taggit',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,25 @@ ALLOWED_HOSTS = ['*']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# CKEditor 配置（移动端适配）
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': '100%',
+        'height': 220,
+        'toolbar': [
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat']},
+            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', 'Blockquote']},
+            {'name': 'alignment', 'items': ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
+            {'name': 'links', 'items': ['Link', 'Unlink']},
+            {'name': 'insert', 'items': ['Smiley']},
+            {'name': 'clipboard', 'items': ['Undo', 'Redo']},
+        ],
+        'removePlugins': 'elementspath',
+        'resize_enabled': False,
+        'extraPlugins': 'autogrow',
+        'autoGrow_onStartup': True,
+        'autoGrow_minHeight': 120,
+        'autoGrow_maxHeight': 400,
+    }
+}

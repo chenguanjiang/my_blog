@@ -1,6 +1,7 @@
 from django.db import models
 from userprofile.models import Profile
 from article.models import ArticlePost
+from ckeditor.fields import RichTextField
 
 
 
@@ -10,7 +11,7 @@ from article.models import ArticlePost
 class Comment(models.Model):
     article = models.ForeignKey(ArticlePost, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
-    body = models.TextField()
+    body = RichTextField()
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

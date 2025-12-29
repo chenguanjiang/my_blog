@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from django.db.models import Q
 from comment.models import Comment
 from taggit.models import Tag
+from comment.forms import CommentForm
 
 
 from article.forms import ArticlePostForm
@@ -58,10 +59,12 @@ def article_detail(request, id):
         p = urlparse(ref)
         if 'article-list' in p.path:
             back_list_url = ref
+    comment_form = CommentForm()
     context = {
         'article': article,
         'back_list_url': back_list_url,
         'comments': comments,
+        'comment_form': comment_form,
     }
     return render(request, 'article/detail.html', context)
 
