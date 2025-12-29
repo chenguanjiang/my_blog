@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'album',
     'userprofile',
     'comment',
+    'taggit',
 ]
 
 MIDDLEWARE = [

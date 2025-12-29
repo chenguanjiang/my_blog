@@ -3,3 +3,4 @@ PyMySQL==1.1.0
 Markdown==3.6
 Pygments==2.16.1
 Pillow==10.4.0
+django-taggit==6.1.0

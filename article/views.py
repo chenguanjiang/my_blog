@@ -12,7 +12,7 @@ from django.urls import reverse
 from urllib.parse import urlparse
 from django.db.models import Q
 from comment.models import Comment
-
+from taggit.models import Tag
 
 
 from article.forms import ArticlePostForm
@@ -87,11 +87,12 @@ def home(request):
 @login_required(login_url='/userprofile/login/')
 def article_create(request):
     if request.method == 'POST':
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(data=request.POST, files=request.FILES)
         if article_post_form.is_valid():
             new_article = article_post_form.save(commit=False)
             new_article.author = User.objects.get(id=request.user.id)
             new_article.save()
+            article_post_form.save_m2m()
             messages.success(request, '文章已发布')
             return redirect('article:article_list')
         else:
@@ -127,6 +128,11 @@ def article_update(request, id):
                 article.title = request.POST['title']
                 article.body = request.POST['body']
                 col_id = request.POST.get('column')
+                tags_str = request.POST.get('tags', '').strip()
+                if tags_str:
+                    article.tags.set([Tag.objects.get_or_create(name=tag.strip())[0] for tag in tags_str.split()])
+                else:
+                    article.tags.clear()
                 if col_id:
                     try:
                         article.column = ArticleColumn.objects.get(id=col_id)
@@ -134,6 +140,8 @@ def article_update(request, id):
                         article.column = None
                 else:
                     article.column = None
+                if request.FILES.get('avatar'):
+                    article.avatar = request.FILES['avatar']
                 article.save()
                 messages.success(request, '文章已更新')
                 return redirect('article:article_detail', id=id)
