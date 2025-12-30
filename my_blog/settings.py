@@ -91,6 +91,11 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
+        'APP': {
+            'client_id': 'Ov23li371GAN6UEL234n',
+            'secret': 'ffeebd7665a36f2164be04bf7e14d45366997c13',
+            'key': ''
+        },
         'SCOPE': [
             'user',
             'user:email',
