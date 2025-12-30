@@ -13,7 +13,7 @@ class Comment(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
     body = RichTextField()
     created = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
         ordering = ('created',)
 
